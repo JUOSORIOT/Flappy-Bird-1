@@ -89,6 +89,9 @@ TextureImporter:
   - first:
       213: 6124130483509997730
     second: Mobile - Flappy Bird - Version 12 Sprites_6
+  - first:
+      213: 6297297506034485570
+    second: Mobile - Flappy Bird - Version 12 Sprites_7
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -491,6 +494,27 @@ TextureImporter:
       bones: []
       spriteID: 2a031cb4a384df450800000000000000
       internalID: 6124130483509997730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mobile - Flappy Bird - Version 12 Sprites_7
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 365
+        width: 52
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 249832c97be746750800000000000000
+      internalID: 6297297506034485570
       vertices: []
       indices: 
       edges: []
