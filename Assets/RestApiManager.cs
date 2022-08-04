@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class RestApiManager : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private string URL;
+    [SerializeField] private Text TableData;
+    [SerializeField] public GameObject TableScores;
     void Start()
     {
         
@@ -30,12 +33,14 @@ public class RestApiManager : MonoBehaviour
         }
         else if(www.responseCode == 200)
         {
+            TableScores.SetActive(true);
             Debug.Log(www.downloadHandler.text);
             ScoresData resData = JsonUtility.FromJson<ScoresData>(www.downloadHandler.text);
 
-            foreach (Puntaje score in resData.scores)
+            foreach (Puntaje data in resData.scores)
             {
-                Debug.Log(score.user_id + " | " + score.registro);
+                Debug.Log(data.user_name + " | " + data.score);
+                TableData.text += data.user_name + ":  " + data.score + "\n";
             }
         }
         else
@@ -48,8 +53,8 @@ public class RestApiManager : MonoBehaviour
 [System.Serializable] 
 public class Puntaje
 {
-    public int user_id;
-    public int registro;
+    public string user_name;
+    public int score;
 }
 [System.Serializable]
 public class ScoresData
