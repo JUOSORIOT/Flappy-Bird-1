@@ -1335,7 +1335,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 199575473}
         m_TargetAssemblyTypeName: RestApiManager, Assembly-CSharp
-        m_MethodName: ClickSignIn
+        m_MethodName: ClickLogIn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

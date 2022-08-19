@@ -1053,7 +1053,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1521267447}
   - component: {fileID: 1521267446}
-  - component: {fileID: 1521267448}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1074,6 +1073,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverCanvas: {fileID: 278984678}
+  URL_FirstPost: https://unitywebrequest-restapi.herokuapp.com/api/usuarios
+  TableData: {fileID: 1589166018}
+  TableScores: {fileID: 67593718}
 --- !u!4 &1521267447
 Transform:
   m_ObjectHideFlags: 0
@@ -1088,21 +1090,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1521267448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521267445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2162d3fe3fd97924a84cd199065d9ce5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  URL: https://my-json-server.typicode.com/JUOSORIOT/Fake-Api1
-  TableData: {fileID: 1589166018}
-  TableScores: {fileID: 67593718}
 --- !u!1 &1589166015
 GameObject:
   m_ObjectHideFlags: 0
@@ -1441,9 +1428,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1521267448}
-        m_TargetAssemblyTypeName: RestApiManager, Assembly-CSharp
-        m_MethodName: ClickGetScores
+      - m_Target: {fileID: 1521267446}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ClickScores
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

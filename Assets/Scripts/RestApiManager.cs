@@ -3,73 +3,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RestApiManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private string URL_FalseApi;
     [SerializeField] private string URL_FirstPost;
-    [SerializeField] private Text TableData;
-    [SerializeField] public GameObject TableScores;
     [SerializeField] private InputField _usernameInputField;
     [SerializeField] private InputField _passwordInputField;
-
+    
+    private string Token;
+    private string Username;
     void Start()
     {
-        
-    }
-
-
+        Token = PlayerPrefs.GetString("token");
+        Username = PlayerPrefs.GetString("username");
+        StartCoroutine(GetProfile());
+        Debug.Log(Token); }
     public void ClickGetScores()
     {
-        StartCoroutine(GetScores());
+
     }
     public void ClickSignUp()
     {
-        AuthData dataPost = new AuthData();
-        dataPost.username = _usernameInputField.text;
-        dataPost.password = _passwordInputField.text;
-        string postData = JsonUtility.ToJson(dataPost);
-
+        string postData = GetInputData();
         StartCoroutine(SignUp(postData));
     }
-    public void ClickSignIn()
+    public void ClickLogIn()
+    {
+        string postData = GetInputData();
+        StartCoroutine(LogIn(postData));
+    }
+    private string GetInputData()
     {
         AuthData dataPost = new AuthData();
         dataPost.username = _usernameInputField.text;
         dataPost.password = _passwordInputField.text;
         string postData = JsonUtility.ToJson(dataPost);
-
-        StartCoroutine(SignIn(postData));
-    }
-
-    IEnumerator GetScores()
-    {
-        string url = URL_FalseApi + "/scores";
-        UnityWebRequest www = UnityWebRequest.Get(url);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError)
-        {
-            Debug.Log("NETWORK ERROR " + www.error);
-        }
-        else if(www.responseCode == 200)
-        {
-            TableScores.SetActive(true);
-            Debug.Log(www.downloadHandler.text);
-            ScoresData resData = JsonUtility.FromJson<ScoresData>(www.downloadHandler.text);
-
-            foreach (Puntaje data in resData.scores)
-            {
-                Debug.Log(data.user_name + " | " + data.score);
-                TableData.text += data.user_name + ":  " + data.score + "\n";
-            }
-        }
-        else
-        {
-            Debug.Log(www.error);
-        }
+        return postData;
     }
     IEnumerator SignUp(string postData)
     {
@@ -87,12 +59,10 @@ public class RestApiManager : MonoBehaviour
         }
         else if(www.responseCode == 200)
         {
-          
-            //Debug.Log(www.downloadHandler.text);
+            Debug.Log(PlayerPrefs.GetInt("oldScore"));
             AuthData resData = JsonUtility.FromJson<AuthData>(www.downloadHandler.text);
-            Debug.Log("Bienvenido " + resData.usuario.username + ", id:" + resData.usuario._id);
-            
-            //StartCoroutine(LogIn()postData)
+            StartCoroutine(LogIn(postData));
+
 
         }
         else
@@ -101,9 +71,8 @@ public class RestApiManager : MonoBehaviour
             Debug.Log(www.downloadHandler.text);
         }
     }
-    IEnumerator SignIn(string postData)
+    IEnumerator LogIn(string postData)
     {
-        
         string url = URL_FirstPost + "/api/auth/login";
         UnityWebRequest www = UnityWebRequest.Put(url,postData);
         www.method = "POST";
@@ -117,16 +86,44 @@ public class RestApiManager : MonoBehaviour
         }
         else if(www.responseCode == 200)
         {
-          
-            //Debug.Log(www.downloadHandler.text);
+            Debug.Log(PlayerPrefs.GetInt("oldScore"));
             AuthData resData = JsonUtility.FromJson<AuthData>(www.downloadHandler.text);
-            
             Debug.Log(resData.token);
-            PlayerPrefs.SetString("token",resData.token);
+            PlayerPrefs.SetString("token", resData.token);
+            PlayerPrefs.SetString("username", resData.usuario.username);
+            PlayerPrefs.SetInt("oldScore", resData.usuario.score);
             PlayerPrefs.Save();
-            //StartCoroutine(LogIn()postData)
-            //PlayerPrefs("token", resData.token);
+            Debug.Log(resData.usuario.score);
+            SceneManager.LoadScene(1);
+        }
+        else
+        {
+            Debug.Log(www.error);
+            Debug.Log(www.downloadHandler.text);
+        }
+    }
+    IEnumerator GetProfile()
+    {
+        string url = URL_FirstPost + "/api/usuarios/" + Username;
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        www.SetRequestHeader("x-token", Token);
+        
+        yield return www.SendWebRequest();
 
+        if (www.isNetworkError)
+        {
+            Debug.Log("NETWORK ERROR " + www.error);
+        }
+        else if(www.responseCode == 200)
+        {
+
+            AuthData resData = JsonUtility.FromJson<AuthData>(www.downloadHandler.text);
+            Debug.Log("Hola " + resData.usuario.score);
+            PlayerPrefs.SetInt("oldScore", (int)resData.usuario.score);
+            PlayerPrefs.Save();
+            Debug.Log(PlayerPrefs.GetString("oldScore"));
+            
+            SceneManager.LoadScene(1);
         }
         else
         {
@@ -139,13 +136,8 @@ public class RestApiManager : MonoBehaviour
 [System.Serializable] 
 public class Puntaje
 {
-    public string user_name;
+    public string username;
     public int score;
-}
-[System.Serializable]
-public class ScoresData
-{
-    public Puntaje[] scores;
 }
 [System.Serializable]
 public class AuthData
@@ -160,6 +152,7 @@ public class UserData
 {
     public string _id;
     public string username;
+    public string password;
     public bool estado;
     public int score;
 }

@@ -29,6 +29,7 @@ public class FlyBird : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         gameManager.GameOver();
     }
 }
